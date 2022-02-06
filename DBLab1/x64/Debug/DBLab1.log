@@ -1,2 +1,6 @@
 ﻿  Main.c
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Master.h(187,29): warning C4020: 'MasterTryGetValue': too many actual parameters
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Main.c(31,26): warning C4020: 'MasterTryGetValue': too many actual parameters
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Master.h(103): warning C4172: returning address of local variable or temporary: master
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Slave.h(52): warning C4172: returning address of local variable or temporary: slave
   DBLab1.vcxproj -> C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\x64\Debug\DBLab1.exe

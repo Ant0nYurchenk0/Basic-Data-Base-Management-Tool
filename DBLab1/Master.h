@@ -16,6 +16,7 @@ struct Master {
 };
 
 void masterUseFreeSpaces(int garbageCount, FILE* garbageCollector, struct Master* master) {
+	FILE* indexTable = fopen(MASTER_IND, "rb");
 	int* deletedIds = malloc(garbageCount * sizeof(int));		// Виділяємо місце під список "сміттєвих" індексів
 
 	for (int i = 0; i < garbageCount; i++)
@@ -38,10 +39,6 @@ void masterUseFreeSpaces(int garbageCount, FILE* garbageCollector, struct Master
 	fclose(garbageCollector);
 }
 
-void masterOutput(struct Master* master) {
-	printf("	Name: %s\n", master->name);
-	printf("	Id: %d\n", master->id);
-}
 
 void masterMarkAsDeleted(id) {
 	FILE* garbageCollector = fopen(MASTER_GARBAGE, "rb");		// "rb": відкриваємо бінарний файл для читання
@@ -69,15 +66,21 @@ void masterMarkAsDeleted(id) {
 	fclose(garbageCollector);
 }
 
-int MasterTryGetValue(int id) {
+void MasterOutput(struct Master* master) {
+	printf("	Name: %s\n", master->name);
+	printf("	Id: %d\n", master->id);
+	printf("	SlavesCount: %d\n", master->slavesCount);
+}
+
+struct Master* MasterTryGetValue(int id) {
 	FILE* indexTable = fopen(MASTER_IND, "rb");				// "rb": відкрити бінарний файл
-	FILE* database = fopen(MASTER_DATA, "rb");				// тільки для читання
+	FILE* dataBase = fopen(MASTER_DATA, "rb");				// тільки для читання
 	struct Indexer indexer;
 
-	if (indexTable == NULL || database == NULL)
+	if (indexTable == NULL || dataBase == NULL)
 	{
 		printf("\x1b[31m*Database does not exist*\x1b[0m\n");
-		return 0;
+		return NULL;
 	}
 
 	fseek(indexTable, 0, SEEK_END);
@@ -87,17 +90,17 @@ int MasterTryGetValue(int id) {
 	if ((!ftell(indexTable) || id * INDEXER_SIZE > ftell(indexTable)) || !indexer.exists)
 	{
 		printf("\x1b[31m*No record corresponds to this Id*\x1b[0m\n");
-		return 0;
+		return NULL;
 	}
 
-	struct Master master;
-	fseek(database, indexer.address, SEEK_SET);				// Отримуємо шуканий запис з БД-таблички
-	fread(&master, sizeof(struct Master), 1, database);		// за знайденою адресою
+	struct Master master ;
+	fseek(dataBase, indexer.address, SEEK_SET);				// Отримуємо шуканий запис з БД-таблички
+	fread(&master, sizeof(struct Master), 1, dataBase);		// за знайденою адресою
 	fclose(indexTable);										// Закриваємо файли
-	fclose(database);
+	fclose(dataBase);
 
-	masterOutput(&master);
-	return 1;
+	
+	return &master;
 }
 
 void MasterInput(struct Master* master) {
@@ -143,32 +146,30 @@ void MasterInsert(struct Master master) {
 		{
 			master.id = 1;									// Індексуємо наш запис як перший
 		}
-		master.firstSlaveAddress = -1;
-		master.slavesCount = 0;
-
-		fwrite(&master, MASTER_SIZE, 1, dataBase);				// Записуємо в потрібне місце БД-таблички передану структуру
-
-		indexer.id = master.id;									// Вносимо номер запису в індексатор
-		indexer.address = (master.id - 1) * MASTER_SIZE;		// Вносимо адресу запису в індексатор
-		indexer.exists = 1;										// Прапорець існування запису		
-
-		fseek(indexTable, (master.id - 1) * INDEXER_SIZE, SEEK_SET);
-		fwrite(&indexer, INDEXER_SIZE, 1, indexTable);			// Записуємо індексатор у відповідну табличку, куди треба
-		fclose(indexTable);										// Закриваємо файли
-		fclose(dataBase);
 	}
+	master.firstSlaveAddress = -1;
+	master.slavesCount = 0;
+
+	fwrite(&master, MASTER_SIZE, 1, dataBase);				// Записуємо в потрібне місце БД-таблички передану структуру
+
+	indexer.id = master.id;									// Вносимо номер запису в індексатор
+	indexer.address = (master.id - 1) * MASTER_SIZE;		// Вносимо адресу запису в індексатор
+	indexer.exists = 1;										// Прапорець існування запису		
+
+	fseek(indexTable, (master.id - 1) * INDEXER_SIZE, SEEK_SET);
+	fwrite(&indexer, INDEXER_SIZE, 1, indexTable);			// Записуємо індексатор у відповідну табличку, куди треба
+	fclose(indexTable);										// Закриваємо файли
+	fclose(dataBase);
+	
 	printf("\x1b[33mId of this master:\x1b[0m %d\n", master.id);
 }
 
-void MasterUpdate(int id) {
-	MasterTryGetValue(id);
+void MasterUpdate(struct Master master) {
+
 
 	FILE* indexTable = fopen(MASTER_IND, "r+b");			// "r+b": відкрити бінарний файл
 	FILE* database = fopen(MASTER_DATA, "r+b");
-
-	struct Master master;
-	MasterInput(&master);
-	master.id = id;
+	int id = master.id;
 
 	struct Indexer indexer;
 	fseek(indexTable, (id - 1) * INDEXER_SIZE, SEEK_SET);	// Отримуємо індексатор шуканого запису
@@ -179,12 +180,11 @@ void MasterUpdate(int id) {
 	fclose(indexTable);										// Закриваємо файли
 	fclose(database);
 
-	printf("\x1b[33m*Updated*\x1b[0m\n");
-	masterOutput(&master);
+
 }
 
 void MasterDelete(int id) {
-	if (!MasterTryGetValue(id)) {
+	if (!MasterTryGetValue(id, NULL)) {
 		return;
 	}
 	int responce;
