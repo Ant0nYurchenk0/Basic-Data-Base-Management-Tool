@@ -21,6 +21,12 @@
     <ClCompile Include="Indexer.h">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="Master.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Slave.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Master.h">

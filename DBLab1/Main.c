@@ -19,7 +19,7 @@ int main() {
 		case 1:			
 			printf("Enter master's Id: ");
 			scanf("%d", &id);
-			MasterOutput( MasterTryGetValue(id));
+			MasterTryGetValue(id, 1);			
 			break;
 		case 2:
 			MasterInput(&master);
@@ -31,9 +31,8 @@ int main() {
 			MasterTryGetValue(id, NULL);
 			master.id = id;
 			MasterInput(&master);
-			MasterUpdate(master);
+			MasterUpdate(master, 0);
 			printf("\x1b[33m*Updated*\x1b[0m\n");
-			MasterOutput(&master);
 			break;
 		case 4:
 			printf("Enter master's Id: ");
@@ -43,17 +42,17 @@ int main() {
 		case 5:
 			printf("Enter master's ID: ");
 			scanf("%d", &id);
-			if (MasterTryGetValue(id))
+			if (MasterTryGetValue(id, 1))
 			{
 				printf("Enter slave's ID: ");
 				scanf("%d", &slaveId);
-				SlaveOutput(SlaveTryGetValue(slaveId, id));
+				SlaveTryGetValue(slaveId, id);				
 			}
 			break;
 		case 6:
 			printf("Enter master's Id: ");
 			scanf("%d", &id);
-			if (MasterTryGetValue(id)) {
+			if (MasterTryGetValue(id, 1)) {
 				slave.masterId = id;
 				SlaveInput(&slave);
 				SlaveInsert(slave);
@@ -62,21 +61,34 @@ int main() {
 		case 7:
 			printf("Enter master's ID: ");
 			scanf("%d", &id);
-			if (MasterTryGetValue(id))
+			if (MasterTryGetValue(id, 0))
 			{
 				printf("Enter slave's ID: ");
-				scanf("%d", &id);
+				scanf("%d", &slaveId);
 
 				if (SlaveTryGetValue(slaveId, id))
 				{
+					slave.id = slaveId;
+					slave.masterId = id;
 					SlaveInput(&slave);
 					SlaveUpdate(slave);
 					printf("\x1b[33m*Updated*\x1b[0m\n");
-					SlaveOutput(&slave);
 				}
 			}
 			break;
 		case 8:
+			printf("Enter master\'s ID: ");
+			scanf("%d", &id);
+			if (MasterTryGetValue(id, 0))
+			{
+				printf("Enter slave's ID: ");
+				scanf("%d", &slaveId);
+
+				if (SlaveTryGetValue(slaveId, id))
+				{
+					SlaveDelete(slaveId, id);
+				}
+			}
 			break;
 		case 9: 
 			printf("\x1b[33mHelp:\x1b[0m\n1 - Get Master\n2 - Insert Master\n3 - Update Master\n4 - Delete Master\n5 - Get Slave\n6 - Insert Slave\n7 - Update Slave\n8 - Delete Slave\n9 - Help\n0 - Quit\n");

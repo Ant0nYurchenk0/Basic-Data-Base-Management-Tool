@@ -1,6 +1,16 @@
 ﻿  Main.c
-C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Master.h(187,29): warning C4020: 'MasterTryGetValue': too many actual parameters
-C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Main.c(31,26): warning C4020: 'MasterTryGetValue': too many actual parameters
-C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Master.h(103): warning C4172: returning address of local variable or temporary: master
-C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Slave.h(52): warning C4172: returning address of local variable or temporary: slave
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Main.c(31,30): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Main.c(31,26): warning C4024: 'MasterTryGetValue': different types for formal and actual parameter 2
+  Master.c
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Master.c(183,33): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Master.c(183,29): warning C4024: 'MasterTryGetValue': different types for formal and actual parameter 2
+  Slave.c
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Slave.c(80,28): warning C4477: 'fprintf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'FILE *'
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Slave.c(80,28): warning C4313: 'fprintf': '%d' in format string conflicts with argument 1 of type 'FILE *'
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Slave.c(108,10): warning C4098: 'SlaveUpdate': 'void' function returning a value
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Slave.c(124,3): warning C4033: 'SlaveTryGetValue' must return a value
+  Generating Code...
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Slave.c(147): warning C4715: 'SlaveTryGetValue': not all control paths return a value
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Slave.c(136): warning C4172: returning address of local variable or temporary: slave
+C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\DBLab1\Master.c(92): warning C4172: returning address of local variable or temporary: master
   DBLab1.vcxproj -> C:\Users\anyur\Documents\MyDocuments\prog\C++\DBLab1\x64\Debug\DBLab1.exe
